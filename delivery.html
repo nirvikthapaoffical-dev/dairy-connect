@@ -1,0 +1,235 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delivery Partner | Dairy Connect</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f4f6f8;color:#20252b}
+header{background:#172c25;color:white;padding:22px 5%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+header h2{letter-spacing:1px}
+header a{color:#b9d8c7;text-decoration:none}
+.container{max-width:1150px;margin:30px auto;padding:0 20px}
+.welcome{margin-bottom:25px}
+.welcome p{color:#69736e;margin-top:7px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;margin:22px 0}
+.stat,.panel{background:white;padding:22px;border-radius:13px;border:1px solid #e7ebe8}
+.stat p{color:#78827c;font-size:13px}
+.stat h2{font-size:29px;margin-top:12px}
+.panel{margin-top:20px}
+.panel h3{margin-bottom:18px}
+form{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+input,select,button{padding:12px;border:1px solid #dce2de;border-radius:7px;font-size:14px}
+button{background:#1d6547;color:white;border:0;cursor:pointer;font-weight:bold}
+button:hover{background:#144c34}
+table{width:100%;border-collapse:collapse;min-width:750px}
+th,td{text-align:left;padding:14px;border-bottom:1px solid #edf0ed;font-size:14px}
+th{color:#68746d;background:#f8faf8}
+.table-wrap{overflow-x:auto}
+.status{padding:6px 9px;border-radius:20px;background:#eaf4ed;color:#21633d;font-size:12px}
+.actions{display:flex;gap:7px;flex-wrap:wrap}
+.actions select{padding:7px}
+.delete{background:#a43c36}
+.empty{text-align:center;padding:25px;color:#7c8580}
+footer{text-align:center;padding:30px;color:#89928d;font-size:13px}
+@media(max-width:600px){header{padding:18px}.container{margin:20px auto}.stat h2{font-size:24px}}
+</style>
+</head>
+<body>
+
+<header>
+    <h2>DAIRY CONNECT</h2>
+    <a href="./index.html">← Back to Portals</a>
+</header>
+
+<main class="container">
+    <section class="welcome">
+        <h1>Delivery Partner Portal</h1>
+        <p>Manage assigned orders and keep deliveries moving.</p>
+    </section>
+
+    <section class="stats">
+        <div class="stat"><p>Total Deliveries</p><h2 id="total">0</h2></div>
+        <div class="stat"><p>Pending</p><h2 id="pending">0</h2></div>
+        <div class="stat"><p>Out for Delivery</p><h2 id="out">0</h2></div>
+        <div class="stat"><p>Delivered</p><h2 id="delivered">0</h2></div>
+    </section>
+
+    <section class="panel">
+        <h3>Driver Information</h3>
+        <form id="driverForm">
+            <input id="driverName" placeholder="Driver name" required>
+            <input id="driverPhone" placeholder="Phone number" required>
+            <input id="vehicle" placeholder="Vehicle / Number plate">
+            <button type="submit">Save Driver Profile</button>
+        </form>
+        <p id="driverMessage" style="margin-top:12px;color:#21633d"></p>
+    </section>
+
+    <section class="panel">
+        <h3>Assign a Delivery</h3>
+        <form id="deliveryForm">
+            <input id="customer" placeholder="Customer name" required>
+            <input id="phone" placeholder="Customer phone" required>
+            <input id="address" placeholder="Delivery address" required>
+            <input id="product" placeholder="Product / Order details" required>
+            <button type="submit">Add Delivery</button>
+        </form>
+    </section>
+
+    <section class="panel">
+        <h3>Delivery Management</h3>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Delivery ID</th>
+                        <th>Customer</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Order</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="deliveryTable"></tbody>
+            </table>
+        </div>
+        <p id="emptyMessage" class="empty">No deliveries yet. Add your first delivery above.</p>
+    </section>
+
+    <section class="panel">
+        <h3>Delivery History</h3>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Delivery ID</th><th>Customer</th><th>Order</th><th>Final Status</th></tr></thead>
+                <tbody id="historyTable"></tbody>
+            </table>
+        </div>
+        <p id="historyEmpty" class="empty">No completed deliveries yet.</p>
+    </section>
+</main>
+
+<footer>© 2026 Dairy Connect — Delivery Management System</footer>
+
+<script>
+const KEY = "dc_delivery_orders";
+const DRIVER_KEY = "dc_delivery_driver";
+
+let deliveries = JSON.parse(localStorage.getItem(KEY) || "[]");
+let driver = JSON.parse(localStorage.getItem(DRIVER_KEY) || "{}");
+
+const $ = id => document.getElementById(id);
+
+function save(){
+    localStorage.setItem(KEY, JSON.stringify(deliveries));
+    render();
+}
+
+function render(){
+    const active = deliveries.filter(d => d.status !== "Delivered" && d.status !== "Failed");
+    const completed = deliveries.filter(d => d.status === "Delivered" || d.status === "Failed");
+
+    $("total").textContent = deliveries.length;
+    $("pending").textContent = deliveries.filter(d => d.status === "Pending").length;
+    $("out").textContent = deliveries.filter(d => d.status === "Out for Delivery").length;
+    $("delivered").textContent = deliveries.filter(d => d.status === "Delivered").length;
+
+    $("deliveryTable").innerHTML = active.map(d => `
+        <tr>
+            <td>${escapeHTML(d.id)}</td>
+            <td>${escapeHTML(d.customer)}</td>
+            <td>${escapeHTML(d.phone)}</td>
+            <td>${escapeHTML(d.address)}</td>
+            <td>${escapeHTML(d.product)}</td>
+            <td><span class="status">${escapeHTML(d.status)}</span></td>
+            <td><div class="actions">
+                <select onchange="updateStatus('${d.id}',this.value)">
+                    <option value="">Update status</option>
+                    <option>Picked Up</option>
+                    <option>Out for Delivery</option>
+                    <option>Delivered</option>
+                    <option>Failed</option>
+                </select>
+                <button class="delete" onclick="removeDelivery('${d.id}')">Delete</button>
+            </div></td>
+        </tr>
+    `).join("");
+
+    $("historyTable").innerHTML = completed.map(d => `
+        <tr>
+            <td>${escapeHTML(d.id)}</td>
+            <td>${escapeHTML(d.customer)}</td>
+            <td>${escapeHTML(d.product)}</td>
+            <td>${escapeHTML(d.status)}</td>
+        </tr>
+    `).join("");
+
+    $("emptyMessage").style.display = active.length ? "none" : "block";
+    $("historyEmpty").style.display = completed.length ? "none" : "block";
+}
+
+function escapeHTML(value){
+    return String(value ?? "").replace(/[&<>"']/g, c => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    })[c]);
+}
+
+$("driverForm").addEventListener("submit", e => {
+    e.preventDefault();
+    driver = {
+        name: $("driverName").value.trim(),
+        phone: $("driverPhone").value.trim(),
+        vehicle: $("vehicle").value.trim()
+    };
+    localStorage.setItem(DRIVER_KEY, JSON.stringify(driver));
+    $("driverMessage").textContent = "Driver profile saved on this browser.";
+});
+
+$("deliveryForm").addEventListener("submit", e => {
+    e.preventDefault();
+
+    const id = "DEL-" + String(Date.now()).slice(-7);
+
+    deliveries.unshift({
+        id,
+        customer: $("customer").value.trim(),
+        phone: $("phone").value.trim(),
+        address: $("address").value.trim(),
+        product: $("product").value.trim(),
+        status: "Pending",
+        createdAt: new Date().toISOString()
+    });
+
+    save();
+    e.target.reset();
+});
+
+function updateStatus(id,status){
+    if(!status) return;
+    const delivery = deliveries.find(d => d.id === id);
+    if(!delivery) return;
+    delivery.status = status;
+    delivery.updatedAt = new Date().toISOString();
+    save();
+}
+
+function removeDelivery(id){
+    if(!confirm("Delete this delivery record?")) return;
+    deliveries = deliveries.filter(d => d.id !== id);
+    save();
+}
+
+if(driver.name){
+    $("driverName").value = driver.name;
+    $("driverPhone").value = driver.phone || "";
+    $("vehicle").value = driver.vehicle || "";
+    $("driverMessage").textContent = "Saved driver profile loaded.";
+}
+
+render();
+</script>
+</body>
+</html>
