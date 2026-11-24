@@ -1,0 +1,1073 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dairy Connect | Farmer Portal</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --green: #176b45;
+    --dark: #123c2b;
+    --light: #f3f7f4;
+    --white: #ffffff;
+    --muted: #718078;
+    --border: #e5ebe7;
+    --red: #dc5555;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: var(--light);
+    color: #24342b;
+}
+
+button, input, select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* LOGIN */
+
+.login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #123c2b, #176b45);
+}
+
+.login-card {
+    background: white;
+    width: 100%;
+    max-width: 420px;
+    padding: 40px;
+    border-radius: 18px;
+    box-shadow: 0 20px 60px #0002;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: 800;
+    color: var(--green);
+    margin-bottom: 8px;
+}
+
+.login-card h1 {
+    font-size: 25px;
+    margin: 30px 0 8px;
+}
+
+.subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.field {
+    margin-bottom: 18px;
+}
+
+.field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.field input, .field select {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    outline: none;
+    background: white;
+}
+
+.field input:focus, .field select:focus {
+    border-color: var(--green);
+}
+
+.primary-btn {
+    width: 100%;
+    padding: 14px;
+    color: white;
+    background: var(--green);
+    border-radius: 8px;
+    font-weight: 700;
+}
+
+.primary-btn:hover {
+    background: var(--dark);
+}
+
+.demo-note {
+    background: #f0f7f2;
+    padding: 12px;
+    margin-top: 20px;
+    border-radius: 8px;
+    font-size: 12px;
+    color: var(--green);
+    line-height: 1.6;
+}
+
+.error {
+    color: var(--red);
+    font-size: 13px;
+    margin-top: 12px;
+}
+
+/* APPLICATION */
+
+.app {
+    min-height: 100vh;
+    display: flex;
+}
+
+.sidebar {
+    width: 245px;
+    background: var(--dark);
+    color: white;
+    min-height: 100vh;
+    padding: 25px 16px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 10;
+}
+
+.sidebar .logo {
+    color: white;
+    padding: 0 12px;
+    margin-bottom: 45px;
+}
+
+.sidebar small {
+    display: block;
+    color: #a8c5b4;
+    padding: 0 12px;
+    margin-bottom: 12px;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+}
+
+.nav-btn {
+    width: 100%;
+    text-align: left;
+    padding: 13px 14px;
+    background: transparent;
+    color: #d4e5da;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+.nav-btn:hover, .nav-btn.active {
+    background: #ffffff1c;
+    color: white;
+}
+
+.logout {
+    position: absolute;
+    bottom: 25px;
+    left: 16px;
+    width: calc(100% - 32px);
+    color: #ffdede;
+}
+
+.main {
+    margin-left: 245px;
+    width: calc(100% - 245px);
+    padding: 28px 35px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    gap: 15px;
+}
+
+.topbar h1 {
+    font-size: 25px;
+}
+
+.topbar p {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+.user-pill {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    padding: 10px 15px;
+    font-size: 13px;
+}
+
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+.section-title {
+    font-size: 20px;
+    margin-bottom: 18px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 25px;
+}
+
+.card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 21px;
+}
+
+.card-label {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 13px;
+}
+
+.card-value {
+    font-size: 25px;
+    font-weight: 800;
+    color: var(--dark);
+}
+
+.card-note {
+    font-size: 11px;
+    color: var(--green);
+    margin-top: 9px;
+}
+
+.panel {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 22px;
+}
+
+.panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+    gap: 10px;
+}
+
+.panel-head h3 {
+    font-size: 16px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+th, td {
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    font-size: 13px;
+}
+
+th {
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+.empty {
+    padding: 35px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.form-grid .field {
+    margin: 0;
+}
+
+.form-actions {
+    margin-top: 20px;
+    max-width: 220px;
+}
+
+.secondary-btn {
+    background: #edf4ef;
+    color: var(--green);
+    padding: 11px 17px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.status {
+    display: inline-block;
+    padding: 6px 10px;
+    background: #eaf5ed;
+    color: var(--green);
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 12px;
+    font-size: 14px;
+}
+
+.profile-grid div {
+    padding: 13px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.profile-grid .muted {
+    color: var(--muted);
+}
+
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+}
+
+.calendar div {
+    background: #f3f7f4;
+    padding: 13px 5px;
+    text-align: center;
+    border-radius: 7px;
+    font-size: 12px;
+}
+
+.calendar .day {
+    background: white;
+    font-weight: 700;
+    color: var(--muted);
+}
+
+.calendar .collected {
+    background: #dff1e4;
+    color: var(--green);
+    font-weight: 700;
+}
+
+.notice {
+    background: #f0f7f2;
+    border-left: 4px solid var(--green);
+    padding: 15px;
+    border-radius: 7px;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+@media(max-width: 1000px) {
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width: 700px) {
+    .sidebar {
+        width: 100%;
+        min-height: auto;
+        height: auto;
+        position: relative;
+        padding: 15px;
+    }
+
+    .sidebar .logo {
+        margin-bottom: 15px;
+    }
+
+    .sidebar small {
+        display: none;
+    }
+
+    .nav-btn {
+        width: auto;
+        display: inline-block;
+        padding: 10px;
+        margin: 2px;
+        font-size: 12px;
+    }
+
+    .logout {
+        position: static;
+        width: auto;
+        display: inline-block;
+    }
+
+    .app {
+        display: block;
+    }
+
+    .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px 15px;
+    }
+
+    .topbar h1 {
+        font-size: 21px;
+    }
+
+    .cards {
+        gap: 10px;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    .card-value {
+        font-size: 20px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .login-card {
+        padding: 28px 22px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN SCREEN -->
+
+<div class="login-screen" id="loginScreen">
+    <div class="login-card">
+        <div class="logo">DAIRY CONNECT.</div>
+        <div style="color:#718078;font-size:12px">FARMER MANAGEMENT PORTAL</div>
+
+        <h1>Welcome back</h1>
+        <p class="subtitle">
+            Sign in to manage your milk collections,
+            payments and farmer account.
+        </p>
+
+        <form id="loginForm">
+            <div class="field">
+                <label>Farmer ID</label>
+                <input id="farmerLoginId" placeholder="Example: DC-FR-001" required>
+            </div>
+
+            <div class="field">
+                <label>Login PIN</label>
+                <input id="farmerPin" type="password" placeholder="Enter your PIN" required>
+            </div>
+
+            <button class="primary-btn" type="submit">Sign In →</button>
+            <div class="error" id="loginError"></div>
+        </form>
+
+        <div class="demo-note">
+            <strong>Demo access</strong><br>
+            Enter any Farmer ID and a PIN of at least 4 digits.
+            This is a demonstration login, not secure authentication.
+        </div>
+    </div>
+</div>
+
+<!-- FARMER APPLICATION -->
+
+<div class="app hidden" id="farmerApp">
+
+    <aside class="sidebar">
+        <div class="logo">DAIRY CONNECT.</div>
+
+        <small>FARMER WORKSPACE</small>
+
+        <button class="nav-btn active" data-page="dashboard">▦ Dashboard</button>
+        <button class="nav-btn" data-page="collection">◷ Milk Collection</button>
+        <button class="nav-btn" data-page="payments">₹ Payments</button>
+        <button class="nav-btn" data-page="calendar">▦ Calendar</button>
+        <button class="nav-btn" data-page="profile">♙ My Profile</button>
+
+        <button class="nav-btn logout" id="logoutBtn">↪ Sign Out</button>
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+            <div>
+                <h1 id="pageHeading">Dashboard</h1>
+                <p>Welcome to your farmer workspace.</p>
+            </div>
+
+            <div class="user-pill" id="farmerBadge">Farmer</div>
+        </header>
+
+        <!-- DASHBOARD -->
+
+        <section class="section active" id="dashboard">
+            <h2 class="section-title">Your Overview</h2>
+
+            <div class="cards">
+                <div class="card">
+                    <div class="card-label">TOTAL MILK COLLECTED</div>
+                    <div class="card-value" id="totalMilk">0 L</div>
+                    <div class="card-note">All recorded collections</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-label">THIS MONTH</div>
+                    <div class="card-value" id="monthMilk">0 L</div>
+                    <div class="card-note">Current month's milk</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-label">ESTIMATED EARNINGS</div>
+                    <div class="card-value" id="totalEarnings">NPR 0</div>
+                    <div class="card-note">Based on your configured rate</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-label">FARMER ID</div>
+                    <div class="card-value" id="dashboardFarmerId">—</div>
+                    <div class="card-note">Your account identification</div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-head">
+                    <h3>Recent Milk Collections</h3>
+                    <button class="secondary-btn" onclick="showPage('collection')">
+                        View All
+                    </button>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Session</th>
+                                <th>Quantity</th>
+                                <th>Fat</th>
+                                <th>SNF</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="notice">
+                <strong>Welcome to Dairy Connect!</strong><br>
+                Record your milk collections and keep track of your
+                monthly earnings in one place.
+            </div>
+        </section>
+
+        <!-- COLLECTION -->
+
+        <section class="section" id="collection">
+            <h2 class="section-title">Record Milk Collection</h2>
+
+            <div class="panel">
+                <form id="collectionForm">
+                    <div class="form-grid">
+                        <div class="field">
+                            <label>Collection Date</label>
+                            <input type="date" id="milkDate" required>
+                        </div>
+
+                        <div class="field">
+                            <label>Collection Session</label>
+                            <select id="milkSession">
+                                <option>Morning</option>
+                                <option>Evening</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label>Milk Quantity (Litres)</label>
+                            <input type="number" id="milkQuantity" min="0.1" step="0.1" placeholder="Enter litres" required>
+                        </div>
+
+                        <div class="field">
+                            <label>Fat (%)</label>
+                            <input type="number" id="milkFat" min="0" max="20" step="0.1" placeholder="Optional">
+                        </div>
+
+                        <div class="field">
+                            <label>SNF (%)</label>
+                            <input type="number" id="milkSnf" min="0" max="20" step="0.1" placeholder="Optional">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="primary-btn" type="submit">Save Collection</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="panel">
+                <div class="panel-head">
+                    <h3>Collection History</h3>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Session</th>
+                                <th>Quantity</th>
+                                <th>Fat</th>
+                                <th>SNF</th>
+                            </tr>
+                        </thead>
+                        <tbody id="collectionTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAYMENTS -->
+
+        <section class="section" id="payments">
+            <h2 class="section-title">Payment Overview</h2>
+
+            <div class="cards">
+                <div class="card">
+                    <div class="card-label">TOTAL MILK</div>
+                    <div class="card-value" id="paymentMilk">0 L</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-label">PAYMENT RATE</div>
+                    <div class="card-value" id="paymentRate">Not set</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-label">ESTIMATED PAYMENT</div>
+                    <div class="card-value" id="paymentTotal">NPR 0</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-label">PAYMENT STATUS</div>
+                    <div class="card-value" style="font-size:18px">Estimate</div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-head">
+                    <h3>Monthly Payment History</h3>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>Milk Quantity</th>
+                                <th>Rate</th>
+                                <th>Estimated Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paymentTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="notice">
+                Payments displayed here are estimates calculated from
+                your recorded milk quantity and the demo rate.
+                Actual payments must be confirmed by the company.
+            </div>
+        </section>
+
+        <!-- CALENDAR -->
+
+        <section class="section" id="calendar">
+            <h2 class="section-title">Collection Calendar</h2>
+
+            <div class="panel">
+                <div class="panel-head">
+                    <button class="secondary-btn" id="previousMonth">← Previous</button>
+                    <h3 id="calendarTitle">Month</h3>
+                    <button class="secondary-btn" id="nextMonth">Next →</button>
+                </div>
+
+                <div class="calendar" id="calendarGrid"></div>
+            </div>
+
+            <div class="notice">
+                Green dates indicate days when you recorded a milk collection.
+            </div>
+        </section>
+
+        <!-- PROFILE -->
+
+        <section class="section" id="profile">
+            <h2 class="section-title">My Farmer Profile</h2>
+
+            <div class="panel">
+                <div class="panel-head">
+                    <h3>Account Information</h3>
+                    <span class="status">Demo Account</span>
+                </div>
+
+                <div class="profile-grid">
+                    <div class="muted">Farmer ID</div>
+                    <div id="profileId">—</div>
+
+                    <div class="muted">Full Name</div>
+                    <div id="profileName">Not provided</div>
+
+                    <div class="muted">Account Type</div>
+                    <div>Farmer</div>
+
+                    <div class="muted">Company</div>
+                    <div>Dairy Connect</div>
+
+                    <div class="muted">Account Status</div>
+                    <div>Demo session</div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3 style="margin-bottom:15px">Payment Rate Settings</h3>
+
+                <div class="field" style="max-width:350px">
+                    <label>Demo Payment Rate (NPR per litre)</label>
+                    <input type="number" id="rateSetting" min="0" step="0.01" placeholder="Enter rate">
+                </div>
+
+                <button class="secondary-btn" id="saveRate">Save Demo Rate</button>
+
+                <p style="font-size:12px;color:#718078;margin-top:12px">
+                    This is a local demo setting, not the official company payment rate.
+                </p>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+let farmerId = "";
+let farmerName = "";
+let calendarDate = new Date();
+
+const storageKey = id => "dairyFarmer_" + id;
+
+let records = [];
+let paymentRate = 0;
+
+function saveData() {
+    localStorage.setItem(storageKey(farmerId), JSON.stringify({
+        records,
+        paymentRate,
+        farmerName
+    }));
+}
+
+function loadData() {
+    const saved = JSON.parse(localStorage.getItem(storageKey(farmerId)) || "{}");
+
+    records = Array.isArray(saved.records) ? saved.records : [];
+    paymentRate = Number(saved.paymentRate) || 0;
+    farmerName = saved.farmerName || "";
+}
+
+$("loginForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const id = $("farmerLoginId").value.trim().toUpperCase();
+    const pin = $("farmerPin").value.trim();
+
+    if (!id || pin.length < 4) {
+        $("loginError").textContent = "Enter a Farmer ID and a PIN of at least 4 digits.";
+        return;
+    }
+
+    farmerId = id;
+    farmerName = "";
+
+    loadData();
+
+    $("loginScreen").classList.add("hidden");
+    $("farmerApp").classList.remove("hidden");
+
+    $("farmerBadge").textContent = farmerId;
+    $("dashboardFarmerId").textContent = farmerId;
+    $("profileId").textContent = farmerId;
+    $("profileName").textContent = farmerName || "Farmer";
+
+    $("rateSetting").value = paymentRate || "";
+
+    $("milkDate").value = new Date().toISOString().split("T")[0];
+
+    renderAll();
+});
+
+$("logoutBtn").addEventListener("click", function() {
+    $("farmerApp").classList.add("hidden");
+    $("loginScreen").classList.remove("hidden");
+    $("loginForm").reset();
+    $("loginError").textContent = "";
+});
+
+document.querySelectorAll(".nav-btn[data-page]").forEach(button => {
+    button.addEventListener("click", () => showPage(button.dataset.page));
+});
+
+function showPage(page) {
+    document.querySelectorAll(".section").forEach(section => {
+        section.classList.remove("active");
+    });
+
+    document.querySelectorAll(".nav-btn[data-page]").forEach(button => {
+        button.classList.remove("active");
+    });
+
+    $(page).classList.add("active");
+
+    document.querySelector('[data-page="' + page + '"]').classList.add("active");
+
+    const headings = {
+        dashboard: "Dashboard",
+        collection: "Milk Collection",
+        payments: "Payments",
+        calendar: "Collection Calendar",
+        profile: "My Profile"
+    };
+
+    $("pageHeading").textContent = headings[page];
+
+    renderAll();
+}
+
+$("collectionForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const quantity = Number($("milkQuantity").value);
+
+    if (quantity <= 0) {
+        alert("Enter a valid milk quantity.");
+        return;
+    }
+
+    records.push({
+        id: Date.now(),
+        date: $("milkDate").value,
+        session: $("milkSession").value,
+        quantity,
+        fat: $("milkFat").value || "—",
+        snf: $("milkSnf").value || "—"
+    });
+
+    records.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    saveData();
+
+    this.reset();
+    $("milkDate").value = new Date().toISOString().split("T")[0];
+
+    renderAll();
+
+    alert("Milk collection saved successfully!");
+});
+
+$("saveRate").addEventListener("click", function() {
+    const rate = Number($("rateSetting").value);
+
+    if (!Number.isFinite(rate) || rate < 0) {
+        alert("Enter a valid payment rate.");
+        return;
+    }
+
+    paymentRate = rate;
+    saveData();
+    renderAll();
+
+    alert("Demo payment rate saved!");
+});
+
+function formatMoney(amount) {
+    return "NPR " + Number(amount).toLocaleString("en-IN", {
+        maximumFractionDigits: 2
+    });
+}
+
+function totalQuantity(list) {
+    return list.reduce((sum, item) => sum + Number(item.quantity), 0);
+}
+
+function renderAll() {
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    const monthRecords = records.filter(item => {
+        const d = new Date(item.date + "T00:00:00");
+        return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+    });
+
+    const total = totalQuantity(records);
+    const monthTotal = totalQuantity(monthRecords);
+    const earnings = total * paymentRate;
+
+    $("totalMilk").textContent = total.toFixed(1) + " L";
+    $("monthMilk").textContent = monthTotal.toFixed(1) + " L";
+    $("totalEarnings").textContent = formatMoney(earnings);
+    $("paymentMilk").textContent = total.toFixed(1) + " L";
+    $("paymentRate").textContent = paymentRate ? formatMoney(paymentRate) : "Not set";
+    $("paymentTotal").textContent = formatMoney(earnings);
+
+    $("recentTable").innerHTML = makeRows(records.slice(0, 5));
+    $("collectionTable").innerHTML = makeRows(records);
+
+    renderPayments();
+    renderCalendar();
+}
+
+function makeRows(list) {
+    if (!list.length) {
+        return '<tr><td colspan="5" class="empty">No milk collection records yet.</td></tr>';
+    }
+
+    return list.map(item => `
+        <tr>
+            <td>${escapeHTML(item.date)}</td>
+            <td>${escapeHTML(item.session)}</td>
+            <td>${Number(item.quantity).toFixed(1)} L</td>
+            <td>${escapeHTML(item.fat)}</td>
+            <td>${escapeHTML(item.snf)}</td>
+        </tr>
+    `).join("");
+}
+
+function renderPayments() {
+    const months = {};
+
+    records.forEach(item => {
+        const d = new Date(item.date + "T00:00:00");
+        const key = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
+
+        if (!months[key]) months[key] = 0;
+
+        months[key] += Number(item.quantity);
+    });
+
+    const keys = Object.keys(months).sort().reverse();
+
+    $("paymentTable").innerHTML = keys.length
+        ? keys.map(key => `
+            <tr>
+                <td>${new Date(key + "-01T00:00:00").toLocaleDateString("en-US", {month:"long",year:"numeric"})}</td>
+                <td>${months[key].toFixed(1)} L</td>
+                <td>${paymentRate ? formatMoney(paymentRate) : "Not set"}</td>
+                <td>${formatMoney(months[key] * paymentRate)}</td>
+            </tr>
+        `).join("")
+        : '<tr><td colspan="4" class="empty">No payment records yet.</td></tr>';
+}
+
+function renderCalendar() {
+    const year = calendarDate.getFullYear();
+    const month = calendarDate.getMonth();
+
+    $("calendarTitle").textContent = calendarDate.toLocaleDateString("en-US", {
+        month: "long",
+        year: "numeric"
+    });
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const days = new Date(year, month + 1, 0).getDate();
+
+    const collectedDates = new Set(records.map(item => item.date));
+
+    let html = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
+        .map(day => `<div class="day">${day}</div>`).join("");
+
+    for (let i = 0; i < firstDay; i++) {
+        html += "<div></div>";
+    }
+
+    for (let day = 1; day <= days; day++) {
+        const date = year + "-" + String(month + 1).padStart(2, "0") + "-" + String(day).padStart(2, "0");
+        const collected = collectedDates.has(date);
+
+        html += `<div class="${collected ? "collected" : ""}" title="${collected ? "Milk collected" : "No collection recorded"}">${day}${collected ? " ✓" : ""}</div>`;
+    }
+
+    $("calendarGrid").innerHTML = html;
+}
+
+$("previousMonth").addEventListener("click", function() {
+    calendarDate.setMonth(calendarDate.getMonth() - 1);
+    renderCalendar();
+});
+
+$("nextMonth").addEventListener("click", function() {
+    calendarDate.setMonth(calendarDate.getMonth() + 1);
+    renderCalendar();
+});
+
+function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[char]);
+}
+</script>
+
+</body>
+</html>
