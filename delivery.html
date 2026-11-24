@@ -4,232 +4,1066 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Delivery Partner | Dairy Connect</title>
+<title>Delivery Dashboard | Dairy Connect</title>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;background:#f4f6f8;color:#20252b}
-header{background:#172c25;color:white;padding:22px 5%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
-header h2{letter-spacing:1px}
-header a{color:#b9d8c7;text-decoration:none}
-.container{max-width:1150px;margin:30px auto;padding:0 20px}
-.welcome{margin-bottom:25px}
-.welcome p{color:#69736e;margin-top:7px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;margin:22px 0}
-.stat,.panel{background:white;padding:22px;border-radius:13px;border:1px solid #e7ebe8}
-.stat p{color:#78827c;font-size:13px}
-.stat h2{font-size:29px;margin-top:12px}
-.panel{margin-top:20px}
-.panel h3{margin-bottom:18px}
-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
-input,select,button{padding:12px;border:1px solid #dce2de;border-radius:7px;font-size:14px}
-button{background:#1d6547;color:white;border:0;cursor:pointer;font-weight:bold}
-button:hover{background:#144c34}
-table{width:100%;border-collapse:collapse;min-width:750px}
-th,td{text-align:left;padding:14px;border-bottom:1px solid #edf0ed;font-size:14px}
-th{color:#68746d;background:#f8faf8}
+
+:root{
+    --green:#176b45;
+    --dark:#123c2b;
+    --light:#f3f7f4;
+    --muted:#78877e;
+    --border:#e5ece7;
+    --white:#fff;
+    --shadow:0 8px 30px rgba(20,55,38,.06);
+}
+
+body{
+    font-family:Inter,Arial,sans-serif;
+    background:#f5f8f6;
+    color:#203229;
+}
+
+button,input,select{font:inherit}
+button{cursor:pointer;border:0}
+
+.layout{display:flex;min-height:100vh}
+
+/* SIDEBAR */
+
+.sidebar{
+    width:245px;
+    background:#123c2b;
+    color:white;
+    padding:27px 18px;
+    position:fixed;
+    inset:0 auto 0 0;
+    display:flex;
+    flex-direction:column;
+    z-index:10;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:0 10px 32px;
+}
+
+.brand-icon{
+    width:39px;height:39px;
+    border-radius:12px;
+    background:#2c8059;
+    display:grid;place-items:center;
+    font-size:21px;
+}
+
+.brand h2{font-size:17px;letter-spacing:1px}
+.brand small{display:block;color:#a8c9b6;font-size:10px;margin-top:4px}
+
+.nav-label{
+    color:#8fae9c;
+    font-size:10px;
+    font-weight:bold;
+    letter-spacing:1.5px;
+    padding:10px 12px;
+}
+
+.nav{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.nav button{
+    background:transparent;
+    color:#c4d7cb;
+    text-align:left;
+    padding:13px 14px;
+    border-radius:9px;
+    font-size:13px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.nav button:hover,.nav button.active{
+    background:#245a40;
+    color:white;
+}
+
+.nav-icon{font-size:17px;width:20px;text-align:center}
+
+.sidebar-bottom{
+    margin-top:auto;
+    border-top:1px solid #315943;
+    padding:18px 10px 0;
+    color:#a9c6b5;
+    font-size:11px;
+    line-height:1.7;
+}
+
+/* MAIN */
+
+.main{
+    margin-left:245px;
+    width:calc(100% - 245px);
+    min-width:0;
+}
+
+.topbar{
+    height:76px;
+    background:white;
+    border-bottom:1px solid var(--border);
+    padding:0 35px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+}
+
+.topbar-left small{
+    color:var(--muted);
+    font-size:11px;
+}
+
+.topbar-left h3{font-size:17px;margin-top:4px}
+
+.profile{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    font-size:12px;
+}
+
+.avatar{
+    width:38px;height:38px;
+    border-radius:50%;
+    background:#e4f1e8;
+    color:var(--green);
+    display:grid;place-items:center;
+    font-weight:bold;
+    font-size:15px;
+}
+
+.content{
+    max-width:1450px;
+    margin:auto;
+    padding:32px 35px 55px;
+}
+
+.welcome{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-bottom:25px;
+}
+
+.welcome h1{font-size:25px;letter-spacing:-.6px}
+.welcome p{color:var(--muted);font-size:13px;margin-top:7px}
+
+.date-label{
+    background:#eaf4ed;
+    color:var(--green);
+    padding:10px 14px;
+    border-radius:9px;
+    font-size:12px;
+}
+
+/* STATS */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.stat{
+    background:white;
+    border:1px solid var(--border);
+    padding:20px;
+    border-radius:13px;
+    box-shadow:var(--shadow);
+}
+
+.stat-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.stat-label{font-size:12px;color:var(--muted)}
+.stat-icon{
+    width:36px;height:36px;
+    border-radius:10px;
+    display:grid;place-items:center;
+    font-size:17px;
+    background:#eaf4ed;
+}
+
+.stat h2{font-size:28px;margin-top:13px}
+.stat small{display:block;color:var(--muted);font-size:11px;margin-top:5px}
+
+/* PANELS */
+
+.panel{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:13px;
+    padding:22px;
+    box-shadow:var(--shadow);
+    margin-bottom:20px;
+}
+
+.panel-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-bottom:19px;
+}
+
+.panel-head h3{font-size:15px}
+.panel-head p{color:var(--muted);font-size:11px;margin-top:5px}
+
+.toolbar{
+    display:flex;
+    gap:9px;
+    flex-wrap:wrap;
+}
+
+input,select{
+    border:1px solid var(--border);
+    background:white;
+    padding:11px 12px;
+    border-radius:8px;
+    outline:none;
+    color:#293b31;
+    font-size:12px;
+}
+
+input:focus,select:focus{border-color:#4d9b70}
+
+.search{min-width:220px}
+
+.btn{
+    background:var(--green);
+    color:white;
+    padding:11px 15px;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.btn:hover{background:var(--dark)}
+.btn-light{background:#edf5ef;color:var(--green)}
+.btn-light:hover{background:#deeee2}
+
+/* DELIVERY CARDS */
+
+.delivery-list{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:15px;
+}
+
+.delivery-card{
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:18px;
+    background:white;
+    transition:.2s;
+}
+
+.delivery-card:hover{
+    border-color:#b7d6c1;
+    box-shadow:0 8px 22px rgba(20,55,38,.07);
+}
+
+.card-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:10px;
+}
+
+.order-id{font-size:11px;color:var(--muted)}
+.customer-name{font-size:16px;margin-top:5px}
+
+.status{
+    display:inline-block;
+    border-radius:30px;
+    padding:6px 10px;
+    font-size:10px;
+    font-weight:bold;
+    background:#fff4df;
+    color:#9a6815;
+}
+
+.status.Picked-Up{background:#e9efff;color:#3d5eaa}
+.status.Out-for-Delivery{background:#e6f1ff;color:#2766a4}
+.status.Delivered{background:#e4f4e8;color:#26713f}
+.status.Failed{background:#ffebeb;color:#b33d3d}
+
+.customer-info{
+    margin-top:17px;
+    padding:13px;
+    background:#f7faf8;
+    border-radius:9px;
+    display:grid;
+    gap:9px;
+}
+
+.info-row{
+    display:flex;
+    gap:9px;
+    align-items:flex-start;
+    font-size:12px;
+    color:#53645a;
+    line-height:1.5;
+}
+
+.info-icon{width:17px;flex-shrink:0}
+
+.product-section{margin-top:17px}
+
+.product-section h4{
+    font-size:11px;
+    color:var(--muted);
+    margin-bottom:10px;
+    text-transform:uppercase;
+    letter-spacing:.6px;
+}
+
+.product-row{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    padding:9px 0;
+    border-bottom:1px solid #edf1ee;
+    font-size:12px;
+}
+
+.product-row:last-child{border-bottom:0}
+.product-name{font-weight:600}
+.product-detail{color:var(--muted);font-size:10px;margin-top:4px}
+.product-price{font-weight:bold;white-space:nowrap}
+
+.order-total{
+    display:flex;
+    justify-content:space-between;
+    padding:13px 0 0;
+    margin-top:5px;
+    border-top:1px solid var(--border);
+    font-size:13px;
+    font-weight:bold;
+}
+
+.card-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:16px;
+}
+
+.card-footer select{flex:1;min-width:140px}
+.card-footer button{white-space:nowrap}
+
+/* DRIVER */
+
+.driver-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr auto;
+    gap:10px;
+}
+
+.driver-message{
+    color:var(--green);
+    font-size:11px;
+    margin-top:12px;
+}
+
+/* HISTORY */
+
 .table-wrap{overflow-x:auto}
-.status{padding:6px 9px;border-radius:20px;background:#eaf4ed;color:#21633d;font-size:12px}
-.actions{display:flex;gap:7px;flex-wrap:wrap}
-.actions select{padding:7px}
-.delete{background:#a43c36}
-.empty{text-align:center;padding:25px;color:#7c8580}
-footer{text-align:center;padding:30px;color:#89928d;font-size:13px}
-@media(max-width:600px){header{padding:18px}.container{margin:20px auto}.stat h2{font-size:24px}}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th,td{
+    text-align:left;
+    padding:14px 12px;
+    border-bottom:1px solid #edf1ee;
+    font-size:12px;
+}
+th{background:#f7faf8;color:#748278;font-size:10px;text-transform:uppercase}
+td{color:#435349}
+.empty{
+    text-align:center;
+    padding:35px 15px;
+    color:var(--muted);
+    font-size:12px;
+}
+.empty span{font-size:28px;display:block;margin-bottom:10px}
+
+/* PAGES */
+
+.page{display:none}
+.page.active{display:block}
+
+.notice{
+    background:#edf5ef;
+    color:#315c41;
+    border:1px solid #dcebe0;
+    border-radius:10px;
+    padding:13px 15px;
+    font-size:11px;
+    line-height:1.7;
+    margin-bottom:20px;
+}
+
+.toast{
+    position:fixed;
+    right:25px;
+    bottom:25px;
+    background:#173f2c;
+    color:white;
+    padding:14px 19px;
+    border-radius:10px;
+    font-size:12px;
+    box-shadow:var(--shadow);
+    display:none;
+    z-index:50;
+}
+
+footer{
+    text-align:center;
+    color:#9aa69e;
+    font-size:10px;
+    padding:20px;
+}
+
+@media(max-width:1000px){
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .delivery-list{grid-template-columns:1fr}
+}
+
+@media(max-width:700px){
+    .sidebar{width:65px;padding:20px 8px}
+    .brand{padding:0 5px 25px}
+    .brand h2,.brand small,.nav-label,.nav-text,.sidebar-bottom{display:none}
+    .brand-icon{width:43px;height:43px}
+    .nav button{justify-content:center;padding:13px 5px}
+    .main{margin-left:65px;width:calc(100% - 65px)}
+    .topbar{padding:0 15px;height:65px}
+    .content{padding:22px 13px 40px}
+    .welcome h1{font-size:21px}
+    .stats{gap:9px}
+    .stat{padding:14px}
+    .stat h2{font-size:23px}
+    .stat-label{font-size:10px}
+    .panel{padding:15px}
+    .driver-grid{grid-template-columns:1fr}
+    .search{min-width:100%;width:100%}
+    .toolbar{width:100%}
+    .toolbar select{flex:1}
+}
 </style>
 </head>
+
 <body>
 
-<header>
-    <h2>DAIRY CONNECT</h2>
-    <a href="./index.html">← Back to Portals</a>
+<div class="layout">
+
+<aside class="sidebar">
+    <div class="brand">
+        <div class="brand-icon">🥛</div>
+        <div>
+            <h2>DAIRY CONNECT</h2>
+            <small>DELIVERY MANAGEMENT</small>
+        </div>
+    </div>
+
+    <div class="nav-label">WORKSPACE</div>
+
+    <nav class="nav">
+        <button class="active" onclick="showPage('dashboard',this)">
+            <span class="nav-icon">▦</span><span class="nav-text">Dashboard</span>
+        </button>
+        <button onclick="showPage('deliveries',this)">
+            <span class="nav-icon">🚚</span><span class="nav-text">My Deliveries</span>
+        </button>
+        <button onclick="showPage('history',this)">
+            <span class="nav-icon">◷</span><span class="nav-text">Delivery History</span>
+        </button>
+        <button onclick="showPage('profile',this)">
+            <span class="nav-icon">♙</span><span class="nav-text">My Profile</span>
+        </button>
+    </nav>
+
+    <div class="sidebar-bottom">
+        <strong>Dairy Connect</strong><br>
+        Delivery Partner Portal<br>
+        Version 2.0
+    </div>
+</aside>
+
+<div class="main">
+
+<header class="topbar">
+    <div class="topbar-left">
+        <small>DAIRY CONNECT / DELIVERY</small>
+        <h3 id="pageTitle">Dashboard</h3>
+    </div>
+
+    <div class="profile">
+        <div class="avatar" id="avatar">D</div>
+        <div>
+            <strong id="topDriverName">Delivery Partner</strong>
+            <div style="color:#89958d;margin-top:4px">Delivery Partner</div>
+        </div>
+    </div>
 </header>
 
-<main class="container">
-    <section class="welcome">
-        <h1>Delivery Partner Portal</h1>
-        <p>Manage assigned orders and keep deliveries moving.</p>
-    </section>
+<main class="content">
 
-    <section class="stats">
-        <div class="stat"><p>Total Deliveries</p><h2 id="total">0</h2></div>
-        <div class="stat"><p>Pending</p><h2 id="pending">0</h2></div>
-        <div class="stat"><p>Out for Delivery</p><h2 id="out">0</h2></div>
-        <div class="stat"><p>Delivered</p><h2 id="delivered">0</h2></div>
-    </section>
+<!-- DASHBOARD -->
+
+<section class="page active" id="dashboard">
+
+    <div class="welcome">
+        <div>
+            <h1>Good day, <span id="welcomeName">Partner</span> 👋</h1>
+            <p>Here's what's happening with your deliveries today.</p>
+        </div>
+        <div class="date-label" id="todayDate"></div>
+    </div>
+
+    <div class="notice">
+        <strong>How this portal works:</strong>
+        Orders are assigned by the company after confirmation and preparation.
+        You can view product details and update the delivery status here.
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-top">
+                <p class="stat-label">Total Deliveries</p>
+                <div class="stat-icon">📦</div>
+            </div>
+            <h2 id="total">0</h2>
+            <small>All assigned deliveries</small>
+        </div>
+
+        <div class="stat">
+            <div class="stat-top">
+                <p class="stat-label">Pending</p>
+                <div class="stat-icon">⏳</div>
+            </div>
+            <h2 id="pending">0</h2>
+            <small>Waiting to be picked up</small>
+        </div>
+
+        <div class="stat">
+            <div class="stat-top">
+                <p class="stat-label">Out for Delivery</p>
+                <div class="stat-icon">🚚</div>
+            </div>
+            <h2 id="out">0</h2>
+            <small>Currently on the way</small>
+        </div>
+
+        <div class="stat">
+            <div class="stat-top">
+                <p class="stat-label">Delivered</p>
+                <div class="stat-icon">✓</div>
+            </div>
+            <h2 id="delivered">0</h2>
+            <small>Successfully completed</small>
+        </div>
+    </div>
 
     <section class="panel">
-        <h3>Driver Information</h3>
-        <form id="driverForm">
-            <input id="driverName" placeholder="Driver name" required>
-            <input id="driverPhone" placeholder="Phone number" required>
-            <input id="vehicle" placeholder="Vehicle / Number plate">
-            <button type="submit">Save Driver Profile</button>
-        </form>
-        <p id="driverMessage" style="margin-top:12px;color:#21633d"></p>
+        <div class="panel-head">
+            <div>
+                <h3>Recent Deliveries</h3>
+                <p>Your latest assigned customer orders</p>
+            </div>
+            <button class="btn btn-light" onclick="showPage('deliveries')">View All →</button>
+        </div>
+
+        <div class="delivery-list" id="recentList"></div>
+        <div class="empty" id="recentEmpty">
+            <span>📦</span>
+            No assigned deliveries yet.
+        </div>
     </section>
 
-    <section class="panel">
-        <h3>Assign a Delivery</h3>
-        <form id="deliveryForm">
-            <input id="customer" placeholder="Customer name" required>
-            <input id="phone" placeholder="Customer phone" required>
-            <input id="address" placeholder="Delivery address" required>
-            <input id="product" placeholder="Product / Order details" required>
-            <button type="submit">Add Delivery</button>
-        </form>
-    </section>
+</section>
+
+<!-- DELIVERIES -->
+
+<section class="page" id="deliveries">
+
+    <div class="welcome">
+        <div>
+            <h1>My Deliveries</h1>
+            <p>View customer orders and manage their delivery status.</p>
+        </div>
+    </div>
 
     <section class="panel">
-        <h3>Delivery Management</h3>
+        <div class="panel-head">
+            <div>
+                <h3>Assigned Orders</h3>
+                <p>Product details are taken from the customer's order.</p>
+            </div>
+        </div>
+
+        <div class="toolbar" style="margin-bottom:18px">
+            <input class="search" id="searchInput" placeholder="Search customer, order ID, phone..." oninput="render()">
+
+            <select id="statusFilter" onchange="render()">
+                <option value="All">All Statuses</option>
+                <option>Pending</option>
+                <option>Picked Up</option>
+                <option>Out for Delivery</option>
+            </select>
+        </div>
+
+        <div class="delivery-list" id="deliveryList"></div>
+
+        <div class="empty" id="deliveryEmpty">
+            <span>🚚</span>
+            No assigned deliveries found.
+        </div>
+    </section>
+
+</section>
+
+<!-- HISTORY -->
+
+<section class="page" id="history">
+
+    <div class="welcome">
+        <div>
+            <h1>Delivery History</h1>
+            <p>Review your completed and failed deliveries.</p>
+        </div>
+    </div>
+
+    <section class="panel">
+        <div class="panel-head">
+            <div>
+                <h3>Completed Deliveries</h3>
+                <p>These records are kept for reference.</p>
+            </div>
+        </div>
+
         <div class="table-wrap">
             <table>
                 <thead>
                     <tr>
                         <th>Delivery ID</th>
                         <th>Customer</th>
-                        <th>Phone</th>
-                        <th>Address</th>
                         <th>Order</th>
+                        <th>Products</th>
+                        <th>Amount</th>
                         <th>Status</th>
-                        <th>Action</th>
+                        <th>Date</th>
                     </tr>
                 </thead>
-                <tbody id="deliveryTable"></tbody>
-            </table>
-        </div>
-        <p id="emptyMessage" class="empty">No deliveries yet. Add your first delivery above.</p>
-    </section>
-
-    <section class="panel">
-        <h3>Delivery History</h3>
-        <div class="table-wrap">
-            <table>
-                <thead><tr><th>Delivery ID</th><th>Customer</th><th>Order</th><th>Final Status</th></tr></thead>
                 <tbody id="historyTable"></tbody>
             </table>
         </div>
-        <p id="historyEmpty" class="empty">No completed deliveries yet.</p>
+
+        <div class="empty" id="historyEmpty">
+            <span>📋</span>
+            No completed deliveries yet.
+        </div>
     </section>
+
+</section>
+
+<!-- PROFILE -->
+
+<section class="page" id="profile">
+
+    <div class="welcome">
+        <div>
+            <h1>My Driver Profile</h1>
+            <p>Keep your contact and vehicle information updated.</p>
+        </div>
+    </div>
+
+    <section class="panel">
+        <div class="panel-head">
+            <div>
+                <h3>Personal Information</h3>
+                <p>Your delivery partner information</p>
+            </div>
+        </div>
+
+        <form id="driverForm">
+            <div class="driver-grid">
+                <input id="driverName" placeholder="Full name" required>
+                <input id="driverPhone" placeholder="Phone number" required>
+                <input id="vehicle" placeholder="Vehicle / Number plate">
+                <button class="btn" type="submit">Save Profile</button>
+            </div>
+        </form>
+
+        <p class="driver-message" id="driverMessage"></p>
+    </section>
+
+</section>
+
 </main>
 
 <footer>© 2026 Dairy Connect — Delivery Management System</footer>
 
-<script>
-const KEY = "dc_delivery_orders";
-const DRIVER_KEY = "dc_delivery_driver";
+</div>
+</div>
 
-let deliveries = JSON.parse(localStorage.getItem(KEY) || "[]");
-let driver = JSON.parse(localStorage.getItem(DRIVER_KEY) || "{}");
+<div class="toast" id="toast"></div>
+
+<script>
+const DELIVERY_KEY = "dc_delivery_orders";
+const DRIVER_KEY = "dc_delivery_driver";
+const COMPANY_KEY = "dc_company_orders";
+const CUSTOMER_KEY = "dc_customer_orders";
 
 const $ = id => document.getElementById(id);
 
-function save(){
-    localStorage.setItem(KEY, JSON.stringify(deliveries));
-    render();
+let deliveries = read(DELIVERY_KEY);
+let driver = JSON.parse(localStorage.getItem(DRIVER_KEY) || "{}");
+
+function read(key){
+    try{
+        const value = JSON.parse(localStorage.getItem(key) || "[]");
+        return Array.isArray(value) ? value : [];
+    }catch{
+        return [];
+    }
 }
 
-function render(){
-    const active = deliveries.filter(d => d.status !== "Delivered" && d.status !== "Failed");
-    const completed = deliveries.filter(d => d.status === "Delivered" || d.status === "Failed");
+function saveDeliveries(){
+    localStorage.setItem(DELIVERY_KEY,JSON.stringify(deliveries));
+}
 
-    $("total").textContent = deliveries.length;
-    $("pending").textContent = deliveries.filter(d => d.status === "Pending").length;
-    $("out").textContent = deliveries.filter(d => d.status === "Out for Delivery").length;
-    $("delivered").textContent = deliveries.filter(d => d.status === "Delivered").length;
-
-    $("deliveryTable").innerHTML = active.map(d => `
-        <tr>
-            <td>${escapeHTML(d.id)}</td>
-            <td>${escapeHTML(d.customer)}</td>
-            <td>${escapeHTML(d.phone)}</td>
-            <td>${escapeHTML(d.address)}</td>
-            <td>${escapeHTML(d.product)}</td>
-            <td><span class="status">${escapeHTML(d.status)}</span></td>
-            <td><div class="actions">
-                <select onchange="updateStatus('${d.id}',this.value)">
-                    <option value="">Update status</option>
-                    <option>Picked Up</option>
-                    <option>Out for Delivery</option>
-                    <option>Delivered</option>
-                    <option>Failed</option>
-                </select>
-                <button class="delete" onclick="removeDelivery('${d.id}')">Delete</button>
-            </div></td>
-        </tr>
-    `).join("");
-
-    $("historyTable").innerHTML = completed.map(d => `
-        <tr>
-            <td>${escapeHTML(d.id)}</td>
-            <td>${escapeHTML(d.customer)}</td>
-            <td>${escapeHTML(d.product)}</td>
-            <td>${escapeHTML(d.status)}</td>
-        </tr>
-    `).join("");
-
-    $("emptyMessage").style.display = active.length ? "none" : "block";
-    $("historyEmpty").style.display = completed.length ? "none" : "block";
+function money(value){
+    return "NPR " + Number(value || 0).toLocaleString("en-IN",{
+        maximumFractionDigits:2
+    });
 }
 
 function escapeHTML(value){
-    return String(value ?? "").replace(/[&<>"']/g, c => ({
-        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    return String(value ?? "").replace(/[&<>"']/g,c=>({
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#39;"
     })[c]);
 }
 
-$("driverForm").addEventListener("submit", e => {
-    e.preventDefault();
-    driver = {
-        name: $("driverName").value.trim(),
-        phone: $("driverPhone").value.trim(),
-        vehicle: $("vehicle").value.trim()
+function toast(message){
+    $("toast").textContent = message;
+    $("toast").style.display = "block";
+    setTimeout(()=>$("toast").style.display="none",2600);
+}
+
+function statusClass(status){
+    return String(status || "").replaceAll(" ","-");
+}
+
+function showPage(page,button){
+    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+    $(page).classList.add("active");
+
+    document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+    if(button) button.classList.add("active");
+    else{
+        const navButton = [...document.querySelectorAll(".nav button")]
+            .find(b=>b.getAttribute("onclick")?.includes("'" + page + "'"));
+        if(navButton) navButton.classList.add("active");
+    }
+
+    const titles = {
+        dashboard:"Dashboard",
+        deliveries:"My Deliveries",
+        history:"Delivery History",
+        profile:"My Profile"
     };
-    localStorage.setItem(DRIVER_KEY, JSON.stringify(driver));
-    $("driverMessage").textContent = "Driver profile saved on this browser.";
-});
 
-$("deliveryForm").addEventListener("submit", e => {
-    e.preventDefault();
+    $("pageTitle").textContent = titles[page];
+    render();
+}
 
-    const id = "DEL-" + String(Date.now()).slice(-7);
+/* PRODUCT DETAILS */
 
-    deliveries.unshift({
-        id,
-        customer: $("customer").value.trim(),
-        phone: $("phone").value.trim(),
-        address: $("address").value.trim(),
-        product: $("product").value.trim(),
-        status: "Pending",
-        createdAt: new Date().toISOString()
+function getProducts(delivery){
+    if(Array.isArray(delivery.items)) return delivery.items;
+    if(Array.isArray(delivery.products)) return delivery.products;
+
+    if(delivery.productName){
+        return [{
+            name:delivery.productName,
+            quantity:delivery.quantity || 1,
+            price:delivery.price || 0,
+            total:delivery.total || 0
+        }];
+    }
+
+    if(delivery.product){
+        return [{
+            name:delivery.product,
+            quantity:1,
+            price:delivery.total || 0,
+            total:delivery.total || 0
+        }];
+    }
+
+    return [];
+}
+
+function getTotal(delivery){
+    if(delivery.totalAmount != null) return Number(delivery.totalAmount);
+
+    const products = getProducts(delivery);
+    if(products.length){
+        return products.reduce((sum,item)=>{
+            return sum + Number(item.total ?? (Number(item.price || 0) * Number(item.quantity || 1)));
+        },0);
+    }
+
+    return Number(delivery.total || 0);
+}
+
+function getOrderNumber(delivery){
+    return delivery.orderId || delivery.id || "—";
+}
+
+function isCompleted(delivery){
+    return delivery.status === "Delivered" || delivery.status === "Failed";
+}
+
+/* DELIVERY CARD */
+
+function deliveryCard(delivery){
+    const products = getProducts(delivery);
+
+    const productHTML = products.length
+        ? products.map(item=>{
+            const quantity = Number(item.quantity || 1);
+            const price = Number(item.price || 0);
+            const total = Number(item.total ?? price * quantity);
+
+            return `
+                <div class="product-row">
+                    <div>
+                        <div class="product-name">${escapeHTML(item.name || item.productName || "Product")}</div>
+                        <div class="product-detail">${quantity} × ${money(price)}</div>
+                    </div>
+                    <div class="product-price">${money(total)}</div>
+                </div>
+            `;
+        }).join("")
+        : `<div class="product-detail">Product details were not included in this delivery record.</div>`;
+
+    const phone = delivery.phone || "Not provided";
+    const address = delivery.address || "Not provided";
+    const status = delivery.status || "Pending";
+
+    return `
+        <article class="delivery-card">
+            <div class="card-top">
+                <div>
+                    <div class="order-id">${escapeHTML(getOrderNumber(delivery))}</div>
+                    <h3 class="customer-name">${escapeHTML(delivery.customer || "Customer")}</h3>
+                </div>
+                <span class="status ${statusClass(status)}">${escapeHTML(status)}</span>
+            </div>
+
+            <div class="customer-info">
+                <div class="info-row"><span class="info-icon">☎</span>${escapeHTML(phone)}</div>
+                <div class="info-row"><span class="info-icon">📍</span>${escapeHTML(address)}</div>
+            </div>
+
+            <div class="product-section">
+                <h4>Order Products</h4>
+                ${productHTML}
+                <div class="order-total">
+                    <span>Order Total</span>
+                    <span>${money(getTotal(delivery))}</span>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <select aria-label="Update delivery status"
+                    onchange="updateStatus('${escapeHTML(delivery.id)}',this.value)">
+                    <option value="">Update status</option>
+                    <option value="Picked Up">Picked Up</option>
+                    <option value="Out for Delivery">Out for Delivery</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Failed">Failed</option>
+                </select>
+                <button class="btn btn-light" onclick="callCustomer('${escapeHTML(phone)}')">☎ Call</button>
+            </div>
+        </article>
+    `;
+}
+
+function callCustomer(phone){
+    if(!phone || phone === "Not provided"){
+        toast("Customer phone number is unavailable.");
+        return;
+    }
+    window.location.href = "tel:" + phone.replace(/[^\d+]/g,"");
+}
+
+/* RENDER */
+
+function render(){
+    deliveries = read(DELIVERY_KEY);
+
+    const active = deliveries.filter(d=>!isCompleted(d));
+    const completed = deliveries.filter(isCompleted);
+
+    $("total").textContent = deliveries.length;
+    $("pending").textContent = deliveries.filter(d=>d.status==="Pending").length;
+    $("out").textContent = deliveries.filter(d=>d.status==="Out for Delivery").length;
+    $("delivered").textContent = deliveries.filter(d=>d.status==="Delivered").length;
+
+    const recent = active.slice(0,4);
+    $("recentList").innerHTML = recent.map(deliveryCard).join("");
+    $("recentEmpty").style.display = recent.length ? "none" : "block";
+
+    const query = ($("searchInput")?.value || "").toLowerCase();
+    const filter = $("statusFilter")?.value || "All";
+
+    const filtered = active.filter(d=>{
+        const searchable = [
+            d.id,d.orderId,d.customer,d.phone,d.address
+        ].join(" ").toLowerCase();
+
+        return searchable.includes(query) &&
+            (filter === "All" || d.status === filter);
     });
 
-    save();
-    e.target.reset();
-});
+    $("deliveryList").innerHTML = filtered.map(deliveryCard).join("");
+    $("deliveryEmpty").style.display = filtered.length ? "none" : "block";
+
+    $("historyTable").innerHTML = completed.map(d=>`
+        <tr>
+            <td>${escapeHTML(d.id)}</td>
+            <td>${escapeHTML(d.customer)}</td>
+            <td>${escapeHTML(getOrderNumber(d))}</td>
+            <td>${escapeHTML(getProducts(d).map(p=>p.name || p.productName).join(", ") || d.product || "—")}</td>
+            <td>${money(getTotal(d))}</td>
+            <td><span class="status ${statusClass(d.status)}">${escapeHTML(d.status)}</span></td>
+            <td>${escapeHTML((d.updatedAt || d.createdAt || "").slice(0,10) || "—")}</td>
+        </tr>
+    `).join("");
+
+    $("historyEmpty").style.display = completed.length ? "none" : "block";
+}
+
+/* UPDATE CUSTOMER AND COMPANY ORDERS */
+
+function syncOrderStatus(delivery,status){
+    const orderId = delivery.orderId;
+
+    if(!orderId) return;
+
+    [COMPANY_KEY,CUSTOMER_KEY].forEach(key=>{
+        const orders = read(key);
+        let changed = false;
+
+        orders.forEach(order=>{
+            if(order.orderId === orderId){
+                order.status = status;
+                order.deliveryStatus = status;
+                order.updatedAt = new Date().toISOString();
+                changed = true;
+            }
+        });
+
+        if(changed){
+            localStorage.setItem(key,JSON.stringify(orders));
+        }
+    });
+}
 
 function updateStatus(id,status){
     if(!status) return;
-    const delivery = deliveries.find(d => d.id === id);
+
+    const delivery = deliveries.find(d=>String(d.id)===String(id));
     if(!delivery) return;
+
     delivery.status = status;
     delivery.updatedAt = new Date().toISOString();
-    save();
+
+    saveDeliveries();
+    syncOrderStatus(delivery,status);
+
+    toast("Delivery status updated: " + status);
+    render();
 }
 
-function removeDelivery(id){
-    if(!confirm("Delete this delivery record?")) return;
-    deliveries = deliveries.filter(d => d.id !== id);
-    save();
-}
+/* DRIVER PROFILE */
 
-if(driver.name){
-    $("driverName").value = driver.name;
+$("driverForm").addEventListener("submit",e=>{
+    e.preventDefault();
+
+    driver = {
+        name:$("driverName").value.trim(),
+        phone:$("driverPhone").value.trim(),
+        vehicle:$("vehicle").value.trim()
+    };
+
+    localStorage.setItem(DRIVER_KEY,JSON.stringify(driver));
+    updateDriverDisplay();
+    $("driverMessage").textContent = "Your driver profile has been saved on this browser.";
+    toast("Driver profile saved.");
+});
+
+function updateDriverDisplay(){
+    const name = driver.name || "Delivery Partner";
+
+    $("topDriverName").textContent = name;
+    $("welcomeName").textContent = name.split(" ")[0];
+    $("avatar").textContent = name.charAt(0).toUpperCase();
+
+    $("driverName").value = driver.name || "";
     $("driverPhone").value = driver.phone || "";
     $("vehicle").value = driver.vehicle || "";
-    $("driverMessage").textContent = "Saved driver profile loaded.";
 }
 
+/* CROSS-TAB REFRESH */
+
+window.addEventListener("storage",event=>{
+    if([DELIVERY_KEY,COMPANY_KEY,CUSTOMER_KEY].includes(event.key)){
+        render();
+    }
+});
+
+/* INITIAL LOAD */
+
+$("todayDate").textContent = new Date().toLocaleDateString("en-IN",{
+    weekday:"short",
+    day:"numeric",
+    month:"short",
+    year:"numeric"
+});
+
+updateDriverDisplay();
 render();
 </script>
+
 </body>
 </html>
