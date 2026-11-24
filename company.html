@@ -455,10 +455,27 @@ const KEY = {
     name:"dc_company_name"
 };
 
-let farmers = load(KEY.farmers,[]);
-let collections = load(KEY.collections,[]);
-let products = load(KEY.products,[]);
-let orders = load(KEY.orders,[]);
+let farmers=load(KEY.farmers);
+let collections=load(KEY.collections);
+let products=load(KEY.products);
+let orders=load(KEY.orders);
+
+// Add sample products automatically on first setup
+if(!localStorage.getItem("dc_sample_products_added")){
+    if(products.length===0){
+        products=[
+            {id:"PRD-MILK",name:"Fresh Milk (1 L)",category:"Milk",price:100,stock:50},
+            {id:"PRD-CURD",name:"Fresh Curd (500 g)",category:"Curd",price:80,stock:30},
+            {id:"PRD-PANEER",name:"Paneer (500 g)",category:"Paneer",price:250,stock:20},
+            {id:"PRD-GHEE",name:"Pure Ghee (500 ml)",category:"Ghee",price:450,stock:15},
+            {id:"PRD-BUTTER",name:"Butter (200 g)",category:"Butter",price:180,stock:25}
+        ];
+
+        save(KEY.products,products);
+    }
+
+    localStorage.setItem("dc_sample_products_added","yes");
+}
 let rate = Number(localStorage.getItem(KEY.rate)) || 80;
 let companyName = localStorage.getItem(KEY.name) || "Dairy Connect";
 
